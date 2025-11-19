@@ -6,8 +6,8 @@ A simple web app for searching flights and building trips. Made with Laravel and
 
 1. Clone the repo  
 ```
-git clone <YOUR_REPO_URL>
-cd <PROJECT_DIR>
+git clone git@github.com:mykhailoBakhmutCa/trip_builder_final.git
+cd trip_builder_final
 ```
 
 2. Copy env file  
