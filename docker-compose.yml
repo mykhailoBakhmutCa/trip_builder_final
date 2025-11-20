@@ -13,6 +13,9 @@ services:
       - db
     networks:
       - trip-builder-network
+    command: >
+      sh -c "chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache &&
+             docker-php-entrypoint php-fpm"
 
   # 2. Nginx Service (Web Server)
   web:
