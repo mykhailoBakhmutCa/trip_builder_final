@@ -1,10 +1,14 @@
+# Environment files
 .env
-.env.backup
-.env.production
+.env.*
+!.env.example
+!.env.production
 
+# Vendor & node modules
 /vendor
 /node_modules
 
+# Laravel specific
 /storage/*.key
 /storage/logs/*.log
 /storage/framework/cache
@@ -13,15 +17,21 @@
 /storage/framework/views
 /storage/app/public
 /public/storage
-
 /.phpunit.result.cache
 /.phpunit.cache
-
 *.log
 /storage/pail
 
+# IDE / Editors
 /.idea
 /.vscode
 /.fleet
 /.nova
 /.zed
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Docker volumes, temp files
+docker/data
