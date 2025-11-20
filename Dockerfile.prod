@@ -26,30 +26,29 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Copy project
+# Copy project files
 COPY . /var/www/html/
 
-# Remove ALL nginx configs
+# Remove ALL nginx configs to avoid conflicts
 RUN rm -f /etc/nginx/conf.d/*
 
-# Replace default nginx.conf with our own full http-block
-COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
-
-# Copy production nginx vhost
+# Copy production nginx config
 COPY ./docker/nginx/production.conf /etc/nginx/conf.d/default.conf
 
-# Debug: show config inside container
-RUN echo "------- NGINX CONFIG -------" \
+# DEBUG: show nginx config inside container (for Railway logs)
+RUN echo "---------- NGINX CONFIG START ----------" \
     && sed -n '1,200p' /etc/nginx/conf.d/default.conf \
-    && echo "----------------------------"
+    && echo "---------- NGINX CONFIG END ------------"
 
-# Install composer dependencies
+# Install dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Fix permissions
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Set correct permissions
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Railway uses PORT env
 ENV PORT=8080
 EXPOSE 8080
 
+# Start PHP-FPM + Nginx together
 CMD sh -c "php-fpm & nginx -g 'daemon off;'"
