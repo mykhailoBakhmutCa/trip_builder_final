@@ -2,11 +2,11 @@ FROM php:8.2-fpm-alpine
 
 # Install system dependencies
 RUN apk update && apk add --no-cache \
+    nginx \
     git \
     curl \
     zip \
     unzip \
-    nginx \
     libxml2-dev \
     libzip-dev \
     libpng-dev \
@@ -29,25 +29,20 @@ WORKDIR /var/www/html
 # Copy project
 COPY . /var/www/html/
 
-# Remove ALL nginx configs
-RUN rm -f /etc/nginx/conf.d/*
+# Copy production .env (MUST BE .env)
+COPY .env.production /var/www/html/.env
 
-# Replace default nginx.conf with our own full http-block
-COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
+# Remove default nginx config
+RUN rm -f /etc/nginx/conf.d/default.conf
 
-# Copy production nginx vhost
-COPY ./docker/nginx/production.conf /etc/nginx/conf.d/default.conf
+# Install your production config
+COPY docker/nginx/production.conf /etc/nginx/conf.d/default.conf
 
-# Debug: show config inside container
-RUN echo "------- NGINX CONFIG -------" \
-    && sed -n '1,200p' /etc/nginx/conf.d/default.conf \
-    && echo "----------------------------"
-
-# Install composer dependencies
+# Install dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Fix permissions
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Laravel permissions
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 ENV PORT=8080
 EXPOSE 8080
