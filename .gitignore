@@ -13,7 +13,7 @@
 /storage/framework/views
 /storage/app/public
 /public/storage
-
+/bootstrap/cache/*.php
 /.phpunit.result.cache
 /.phpunit.cache
 
@@ -25,3 +25,11 @@
 /.fleet
 /.nova
 /.zed
+
+/bootstrap/cache
+/storage/app
+/storage/framework
+/storage/logs
+
+/bootstrap/app.php
+/bootstrap/providers.php
